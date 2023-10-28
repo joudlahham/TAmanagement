@@ -1,1 +1,541 @@
-mysql: [ERROR] mysql: unknown option '-J'.
+mysql: [Warning] Using a password on the command line interface can be insecure.
+--------------
+SELECT * FROM course
+--------------
+
++-----------+----------------------+-------+------+
+| coursenum | coursename           | level | year |
++-----------+----------------------+-------+------+
+| CS1026    | Intro to Programming |     1 | 1995 |
+| CS1033    | Multimedia           |     1 | 2003 |
+| CS3319    | Intro to Databases   |     3 | 1973 |
+| CS4411    | Advanced Databases   |     4 | 1987 |
++-----------+----------------------+-------+------+
+4 rows in set (0.00 sec)
+
+--------------
+UPDATE course
+SET coursename = 'Multimedia and Communications'
+WHERE coursename = 'Multimedia'
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--------------
+SELECT * FROM ta
+--------------
+
++----------+-----------+----------+------------+------------+
+| tauserid | firstname | lastname | studentnum | degreetype |
++----------+-----------+----------+------------+------------+
+| cgeller  | Chandler  | Geller   | 251000444  | PhD        |
+| jbing    | Joey      | Bing     | 251000444  | PhD        |
+| mgeller  | Monica    | Geller   | 251000123  | PhD        |
+| pbing    | Phoebe    | Bing     | 251000555  | Masters    |
+| pbing2   | Patty     | Bing     | 251000666  | Masters    |
+| rgeller  | Ross      | Geller   | 251000222  | Masters    |
+| rgreen   | Rachel    | Green    | 251000333  | PhD        |
++----------+-----------+----------+------------+------------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM hasworkedon
+--------------
+
++----------+------+-------+
+| tauserid | coid | hours |
++----------+------+-------+
+| mgeller  | RD12 |   100 |
+| mgeller  | RD34 |   100 |
+| mgeller  | RD37 |    50 |
+| mgeller  | RD44 |    20 |
+| mgeller  | RD99 |   100 |
+| rgeller  | RD34 |    80 |
+| rgreen   | RD34 |   100 |
++----------+------+-------+
+7 rows in set (0.00 sec)
+
+--------------
+UPDATE hasworkedon
+SET hours = 200
+WHERE tauserid IN (SELECT tauserid FROM ta WHERE firstname LIKE 'R%')
+--------------
+
+Query OK, 2 rows affected (0.02 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+--------------
+SELECT * FROM course
+--------------
+
++-----------+-------------------------------+-------+------+
+| coursenum | coursename                    | level | year |
++-----------+-------------------------------+-------+------+
+| CS1026    | Intro to Programming          |     1 | 1995 |
+| CS1033    | Multimedia and Communications |     1 | 2003 |
+| CS3319    | Intro to Databases            |     3 | 1973 |
+| CS4411    | Advanced Databases            |     4 | 1987 |
++-----------+-------------------------------+-------+------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM hasworkedon
+--------------
+
++----------+------+-------+
+| tauserid | coid | hours |
++----------+------+-------+
+| mgeller  | RD12 |   100 |
+| mgeller  | RD34 |   100 |
+| mgeller  | RD37 |    50 |
+| mgeller  | RD44 |    20 |
+| mgeller  | RD99 |   100 |
+| rgeller  | RD34 |   200 |
+| rgreen   | RD34 |   200 |
++----------+------+-------+
+7 rows in set (0.00 sec)
+
+--------------
+ALTER TABLE course MODIFY coursename VARCHAR(100)
+--------------
+
+Query OK, 4 rows affected (0.24 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO course (coursenum, coursename, level, year) VALUES ('2208', 'Computer Organization & Architecture', 2, 2023)
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+INSERT INTO courseoffer (coid, numstudent, term, year, whichcourse)
+VALUES ('01', 30, 'Spring', 2020, 'CS3319'), ('02', 40, 'Winter', 2021, 'CS3319'), ('03', 25, 'Fall', 2019, 'CS3319')
+--------------
+
+Query OK, 3 rows affected (0.03 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+--------------
+INSERT INTO ta (tauserid, firstname, lastname, studentnum, degreetype) VALUES ('93020463','Nancy','Ajram','1234567','PhD')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO loves (tauserid, lcoursenum) VALUES ('93020463','CS3319')
+--------------
+
+ERROR 1054 (42S22) at line 36: Unknown column 'tauserid' in 'field list'
+--------------
+SELECT * FROM course WHERE coursenum = 'CS3319'
+--------------
+
++-----------+--------------------+-------+------+
+| coursenum | coursename         | level | year |
++-----------+--------------------+-------+------+
+| CS3319    | Intro to Databases |     3 | 1973 |
++-----------+--------------------+-------+------+
+1 row in set (0.00 sec)
+
+--------------
+INSERT INTO hasworkedon (tauserid, coid, hours) VALUES ('93020463', '01', 40)
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+SELECT * FROM course WHERE coursenum = 'CS3319'
+--------------
+
++-----------+--------------------+-------+------+
+| coursenum | coursename         | level | year |
++-----------+--------------------+-------+------+
+| CS3319    | Intro to Databases |     3 | 1973 |
++-----------+--------------------+-------+------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT * FROM courseoffer WHERE whichcourse = 'CS3319'
+--------------
+
++------+------------+--------+------+-------------+
+| coid | numstudent | term   | year | whichcourse |
++------+------------+--------+------+-------------+
+| 01   |         30 | Spring | 2020 | CS3319      |
+| 02   |         40 | Winter | 2021 | CS3319      |
+| 03   |         25 | Fall   | 2019 | CS3319      |
+| RD44 |        200 | Fall   | 2023 | CS3319      |
+| RD55 |        250 | Fall   | 2020 | CS3319      |
+| RD66 |        170 | Fall   | 2021 | CS3319      |
++------+------------+--------+------+-------------+
+6 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM ta WHERE tauserid = '93020463'
+--------------
+
++----------+-----------+----------+------------+------------+
+| tauserid | firstname | lastname | studentnum | degreetype |
++----------+-----------+----------+------------+------------+
+| 93020463 | Nancy     | Ajram    | 1234567    | PhD        |
++----------+-----------+----------+------------+------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT * FROM loves WHERE ltauserid = '93020463'
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+SELECT lastname FROM ta
+--------------
+
++----------+
+| lastname |
++----------+
+| Ajram    |
+| Geller   |
+| Bing     |
+| Geller   |
+| Bing     |
+| Bing     |
+| Geller   |
+| Green    |
++----------+
+8 rows in set (0.00 sec)
+
+--------------
+SELECT DISTINCT lastname FROM ta
+--------------
+
++----------+
+| lastname |
++----------+
+| Ajram    |
+| Geller   |
+| Bing     |
+| Green    |
++----------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM ta ORDER BY firstname ASC
+--------------
+
++----------+-----------+----------+------------+------------+
+| tauserid | firstname | lastname | studentnum | degreetype |
++----------+-----------+----------+------------+------------+
+| cgeller  | Chandler  | Geller   | 251000444  | PhD        |
+| jbing    | Joey      | Bing     | 251000444  | PhD        |
+| mgeller  | Monica    | Geller   | 251000123  | PhD        |
+| 93020463 | Nancy     | Ajram    | 1234567    | PhD        |
+| pbing2   | Patty     | Bing     | 251000666  | Masters    |
+| pbing    | Phoebe    | Bing     | 251000555  | Masters    |
+| rgreen   | Rachel    | Green    | 251000333  | PhD        |
+| rgeller  | Ross      | Geller   | 251000222  | Masters    |
++----------+-----------+----------+------------+------------+
+8 rows in set (0.00 sec)
+
+--------------
+SELECT firstname, lastname, tauserid FROM ta WHERE degreetype = 'Masters'
+--------------
+
++-----------+----------+----------+
+| firstname | lastname | tauserid |
++-----------+----------+----------+
+| Phoebe    | Bing     | pbing    |
+| Patty     | Bing     | pbing2   |
+| Ross      | Geller   | rgeller  |
++-----------+----------+----------+
+3 rows in set (0.00 sec)
+
+--------------
+SELECT coid, term, year, whichcourse FROM courseoffer INNER JOIN course ON courseoffer.whichcourse = course.coursenum
+WHERE coursename LIKE '%Database%'
+--------------
+
+ERROR 1052 (23000) at line 66: Column 'year' in field list is ambiguous
+--------------
+SELECT * FROM courseoffer INNER JOIN course ON courseoffer.whichcourse = course.coursenum
+WHERE courseoffer.year < course.year
+--------------
+
++------+------------+--------+------+-------------+-----------+-------------------------------+-------+------+
+| coid | numstudent | term   | year | whichcourse | coursenum | coursename                    | level | year |
++------+------------+--------+------+-------------+-----------+-------------------------------+-------+------+
+| RD13 |        130 | Spring | 1990 | CS1026      | CS1026    | Intro to Programming          |     1 | 1995 |
+| RD99 |        600 | Fall   | 2001 | CS1033      | CS1033    | Multimedia and Communications |     1 | 2003 |
++------+------------+--------+------+-------------+-----------+-------------------------------+-------+------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT course.coursename, course.coursenum FROM loves INNER JOIN ta ON loves.ltauserid = ta.tauserid
+INNER JOIN course ON loves.lcoursenum = course.coursenum WHERE ta.lastname = 'Geller'
+--------------
+
++-------------------------------+-----------+
+| coursename                    | coursenum |
++-------------------------------+-----------+
+| Multimedia and Communications | CS1033    |
+| Advanced Databases            | CS4411    |
++-------------------------------+-----------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT SUM(numstudent), course.coursename, course.coursenum FROM courseoffer INNER JOIN course ON courseoffer.whichcourse = course.coursenum
+WHERE course.coursenum = 'CS1033'
+--------------
+
++-----------------+-------------------------------+-----------+
+| SUM(numstudent) | coursename                    | coursenum |
++-----------------+-------------------------------+-----------+
+|            2140 | Multimedia and Communications | CS1033    |
++-----------------+-------------------------------+-----------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT DISTINCT ta.firstname, ta.lastname, course.coursenum FROM hasworkedon INNER JOIN ta ON hasworkedon.tauserid = ta.tauserid
+INNER JOIN courseoffer ON hasworkedon.coid = courseoffer.coid INNER JOIN course ON courseoffer.whichcourse = course.coursenum WHERE course.level = 1
+--------------
+
++-----------+----------+-----------+
+| firstname | lastname | coursenum |
++-----------+----------+-----------+
+| Monica    | Geller   | CS1033    |
+| Ross      | Geller   | CS1033    |
+| Rachel    | Green    | CS1033    |
++-----------+----------+-----------+
+3 rows in set (0.00 sec)
+
+--------------
+SELECT ta.firstname, ta.lastname, MAX(hasworkedon.hours) AS MaxHours FROM hasworkedon INNER JOIN ta ON hasworkedon.tauserid = ta.tauserid
+GROUP BY hasworkedon.tauserid ORDER BY MaxHours DESC LIMIT 1
+--------------
+
++-----------+----------+----------+
+| firstname | lastname | MaxHours |
++-----------+----------+----------+
+| Ross      | Geller   |      200 |
++-----------+----------+----------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT coursenum FROM course WHERE coursenum NOT IN (SELECT lcoursenum FROM loves UNION SELECT hcoursenum FROM hates)
+--------------
+
++-----------+
+| coursenum |
++-----------+
+| 2208      |
++-----------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT ta.firstname, ta.lastname, COUNT(hasworkedon.coid) FROM ta INNER JOIN hasworkedon ON ta.tauserid = hasworkedon.tauserid
+GROUP BY ta.tauserid HAVING COUNT(hasworkedon.coid) > 1
+--------------
+
++-----------+----------+-------------------------+
+| firstname | lastname | COUNT(hasworkedon.coid) |
++-----------+----------+-------------------------+
+| Monica    | Geller   |                       5 |
++-----------+----------+-------------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT DISTINCT ta.firstname, ta.lastname, course.coursenum, course.coursename 
+FROM ta 
+INNER JOIN hasworkedon ON ta.tauserid = hasworkedon.tauserid 
+INNER JOIN courseoffer ON hasworkedon.coid = courseoffer.coid
+INNER JOIN course ON courseoffer.whichcourse = course.coursenum
+INNER JOIN loves ON ta.tauserid = loves.tauserid
+WHERE loves.coursenum = course.coursenum
+--------------
+
+ERROR 1054 (42S22) at line 105: Unknown column 'loves.coursenum' in 'where clause'
+--------------
+DROP VIEW IF EXISTS FallCourses
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+--------------
+CREATE VIEW FallCourses AS SELECT whichcourse, COUNT(*) AS num_offers FROM courseoffer WHERE term = 'Fall' GROUP BY whichcourse
+--------------
+
+Query OK, 0 rows affected (0.03 sec)
+
+--------------
+SELECT course.coursenum, course.coursename, FallCourses.num_offers FROM course INNER JOIN FallCourses ON course.coursenum = FallCourses.whichcourse ORDER BY num_offers DESC LIMIT 1
+--------------
+
++-----------+--------------------+------------+
+| coursenum | coursename         | num_offers |
++-----------+--------------------+------------+
+| CS3319    | Intro to Databases |          4 |
++-----------+--------------------+------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT firstname FROM ta WHERE firstname LIKE '%e%' ORDER BY firstname
+--------------
+
++-----------+
+| firstname |
++-----------+
+| Chandler  |
+| Joey      |
+| Phoebe    |
+| Rachel    |
++-----------+
+4 rows in set (0.00 sec)
+
+--------------
+DROP VIEW IF EXISTS viewHatedCourses
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+--------------
+CREATE VIEW viewHatedCourses AS SELECT ta.firstname, ta.lastname, ta.tauserid, course.coursenum, course.coursename
+FROM ta
+INNER JOIN hates ON ta.tauserid = hates.htauserid
+INNER JOIN course ON hates.hcoursenum = course.coursenum
+ORDER BY course.level
+--------------
+
+Query OK, 0 rows affected (0.03 sec)
+
+--------------
+SELECT * FROM viewHatedCourses
+--------------
+
++-----------+----------+----------+-----------+-------------------------------+
+| firstname | lastname | tauserid | coursenum | coursename                    |
++-----------+----------+----------+-----------+-------------------------------+
+| Phoebe    | Bing     | pbing    | CS1033    | Multimedia and Communications |
+| Monica    | Geller   | mgeller  | CS3319    | Intro to Databases            |
+| Phoebe    | Bing     | pbing    | CS3319    | Intro to Databases            |
++-----------+----------+----------+-----------+-------------------------------+
+3 rows in set (0.01 sec)
+
+--------------
+SELECT DISTINCT ta.firstname, ta.lastname, courseoffer.coid FROM viewHatedCourses INNER JOIN hasworkedon ON hasworkedon.tauserid = viewHatedCourses.tauserid 
+INNER JOIN courseoffer ON hasworkedon.coid = courseoffer.coid
+--------------
+
+ERROR 1054 (42S22) at line 136: Unknown column 'ta.firstname' in 'field list'
+--------------
+SELECT * FROM ta
+--------------
+
++----------+-----------+----------+------------+------------+
+| tauserid | firstname | lastname | studentnum | degreetype |
++----------+-----------+----------+------------+------------+
+| 93020463 | Nancy     | Ajram    | 1234567    | PhD        |
+| cgeller  | Chandler  | Geller   | 251000444  | PhD        |
+| jbing    | Joey      | Bing     | 251000444  | PhD        |
+| mgeller  | Monica    | Geller   | 251000123  | PhD        |
+| pbing    | Phoebe    | Bing     | 251000555  | Masters    |
+| pbing2   | Patty     | Bing     | 251000666  | Masters    |
+| rgeller  | Ross      | Geller   | 251000222  | Masters    |
+| rgreen   | Rachel    | Green    | 251000333  | PhD        |
++----------+-----------+----------+------------+------------+
+8 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM hates
+--------------
+
++-----------+------------+
+| htauserid | hcoursenum |
++-----------+------------+
+| pbing     | CS1033     |
+| mgeller   | CS3319     |
+| pbing     | CS3319     |
++-----------+------------+
+3 rows in set (0.00 sec)
+
+--------------
+SET foreign_key_checks = 0
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+DELETE FROM ta WHERE tauserid = 'pbing'
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+SELECT * FROM ta WHERE tauserid = 'pbing'
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+SELECT * FROM hates
+--------------
+
++-----------+------------+
+| htauserid | hcoursenum |
++-----------+------------+
+| pbing     | CS1033     |
+| mgeller   | CS3319     |
+| pbing     | CS3319     |
++-----------+------------+
+3 rows in set (0.00 sec)
+
+--------------
+DELETE FROM ta WHERE tauserid = 'mgeller'
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+SET foreign_key_checks = 1
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+ALTER TABLE ta ADD image VARCHAR(200)
+--------------
+
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+SELECT * FROM ta
+--------------
+
++----------+-----------+----------+------------+------------+-------+
+| tauserid | firstname | lastname | studentnum | degreetype | image |
++----------+-----------+----------+------------+------------+-------+
+| 93020463 | Nancy     | Ajram    | 1234567    | PhD        | NULL  |
+| cgeller  | Chandler  | Geller   | 251000444  | PhD        | NULL  |
+| jbing    | Joey      | Bing     | 251000444  | PhD        | NULL  |
+| pbing2   | Patty     | Bing     | 251000666  | Masters    | NULL  |
+| rgeller  | Ross      | Geller   | 251000222  | Masters    | NULL  |
+| rgreen   | Rachel    | Green    | 251000333  | PhD        | NULL  |
++----------+-----------+----------+------------+------------+-------+
+6 rows in set (0.00 sec)
+
+--------------
+UPDATE ta SET image = 'https://i.pinimg.com/originals/bf/85/8d/bf858d262ce992754e2b78042c9e0fe8.gif' WHERE tauserid = 'mgeller'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+--------------
+SELECT * FROM ta WHERE tauserid = 'mgeller'
+--------------
+
+Empty set (0.00 sec)
+
+Bye
