@@ -1,4 +1,12 @@
+/*   Programmer: Joud Al-lahham 
+     Student Number: 82
+     Date: 2023/11/25
+     File: style.css
+     Description: This stylesheet defines the visual presentation for a TA management system. 
+*/
+
 <style>
+/* General body styling */
   body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,7 +14,7 @@
     background-color: #f4f4f4;
     box-sizing: border-box;
   }
-
+/* Container for content */
   .container {
     width: 80%;
     margin: 20px auto;
@@ -18,7 +26,7 @@
 form {
     margin: 25px 0;
 }
-
+/* Dropdown and option styling */
 form select {
     padding: 10px;
     border-radius: 5px;
@@ -26,7 +34,7 @@ form select {
     background-color: white;
     cursor: pointer;
 }
-
+/* Label styling for form elements */
 form label {
     display: block;
     margin: 10px 0 5px 0;

@@ -1,3 +1,10 @@
+<!-- Programmer: Joud Al-lahham 
+     Student Number: 82
+     Date: 2023/11/25
+     File: addta.php
+     Description: This file adds a TA to the ta database
+-->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,13 +19,15 @@
         <a href="mainmenu.php" class="button">Menu</a>
     </div>
         <h1>Add New TA:</h1>
+	<!-- Form for adding a new TA -->
         <form action="addta.php" method="post">
             <p> TA User ID: <input type="text" name="userid" required></p>
             <p> First Name: <input type="text" name="firstname" required></p>
             <p> Last Name: <input type="text" name="lastname" required></p>
             <p> Student Number: <input type="text" name="studentnumber" required></p>
-            <p> Degree Type: <input type="text" name="degreetype" required></p>
-            
+            <p> Degree Type: <input type="text" name="degreetype" required></p> 
+        
+	<!-- Dropdown to select courses the new TA loves -->
         <h2>Courses Loved:</h2>
 	<?php
         $coursesQuery = "SELECT coursenum, coursename FROM course ORDER BY coursenum";
@@ -31,6 +40,7 @@
             echo '</select>';
         }?>
 	
+        <!-- Dropdown to select courses the new TA hates -->
 	<h2>Courses Hated:</h2>
 	<?php
 	mysqli_data_seek($coursesResult, 0); // Go to the beginning of the set
@@ -43,11 +53,13 @@
         }
         ?>
 
+        <!-- Dropdown to assign courses the new TA has worked on -->
 	<h2>Assign Courses Worked On:</h2>
 	<label for="assignedCourse">Select Course:</label>
         <select name="assignedCourse" id="assignedCourse">
         <option value="">No Course Selected</option>
         <?php
+        // Query to get course offerings for the assignment
 	$coursesQuery = "SELECT courseoffer.coid, courseoffer.year, course.coursenum, course.coursename FROM courseoffer INNER JOIN course ON courseoffer.whichcourse = course.coursenum ORDER BY courseoffer.year DESC, course.coursenum";
         $coursesResult = mysqli_query($connection, $coursesQuery);    
             if (!$coursesResult) {
@@ -62,7 +74,8 @@
             }
             ?>
         </select>
-	
+
+        <!-- Input field for hours worked -->	
 	<br>
 	<label for="hoursWorked">Hours Worked:</label>
         <input type="number" name="hoursWorked" id="hoursWorked" min="0">
@@ -71,6 +84,7 @@
 	<input type="submit" value="Add TA">
         </form>
 
+    <!-- PHP section to process the form submission -->
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tauserid = mysqli_real_escape_string($connection, $_POST["userid"]);

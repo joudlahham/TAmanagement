@@ -1,3 +1,11 @@
+<!-- Programmer: Joud Al-lahham 
+     Student Number: 82
+     Date: 2023/11/25
+     File: tainfo.php
+     Description: This script displays a sortable list of teaching assistants (TAs) from a database. 
+     The user can sort the list by last name or degree type in ascending or descending order. 
+-->
+
 <?php require_once('dbconnect.php');?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +20,8 @@
   </div>
   <div class="container">
     <h1>TA Information</h1>
+
+    <!-- Form to sort TAs by last name or degree type -->
     <form action="tainfo.php" method="post">
     <label for="sortby">Sort by:</label>
     <select id="sortby" name="sortby">
@@ -26,8 +36,9 @@
     </select>
 
     <input type="submit" value="Sort" class="button">
-
     </form>
+
+    <!-- Table to display TA information -->
     <table>
         <tr>
             <th>User ID</th>
@@ -39,6 +50,7 @@
         </tr>
 </div>
         <?php
+        // Initialize where clause and order by default values
         $whereClause = '';
         if (isset($_POST['degreeFilter'])) {
             $degreeFilter = mysqli_real_escape_string($connection, $_POST['degreeFilter']);
@@ -46,11 +58,13 @@
         }
 
         $orderBy = 'lastname ASC'; // default order
+        // Check if form was submitted to filter TAs by degree type
         if (isset($_POST['sortby']) && isset($_POST['order'])) {
             $sortby = mysqli_real_escape_string($connection, $_POST['sortby']);
             $order = mysqli_real_escape_string($connection, $_POST['order']);
             $orderBy = "{$sortby} {$order}";
         }
+        // Fetch TA data with optional filtering and sorting
         $query = "SELECT * FROM ta {$whereClause} ORDER BY {$orderBy}";
         $result = mysqli_query($connection, $query);
 

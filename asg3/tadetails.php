@@ -1,3 +1,11 @@
+<!-- Programmer: Joud Al-lahham 
+     Student Number: 82
+     Date: 2023/11/25
+     File: tadetails.php
+     Description: This file serves as the detailed view for a Teaching Assistant (TA) in the database.
+     It provides functionality to display a TA's personal information, the courses they love and hate, as well as the courses they have worked on.
+-->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,18 +18,19 @@
     <a href="mainmenu.php" class="button">Menu</a>
     </div>
 
+  <!-- Main container for TA details -->
   <div class="container">
 
     <?php
     include 'dbconnect.php';
 
-    // Check if the 'taid' GET parameter is set
+    // Check if 'taid' GET parameter is set
     if (!isset($_GET['taid'])) {
         die("TA ID not specified.");
     }
     $taid = mysqli_real_escape_string($connection, $_GET['taid']);
 
-    // Query for the specific TA
+    // Query for specific TA
     $query = "SELECT * FROM ta WHERE tauserid='$taid'";
     $ta_result = mysqli_query($connection, $query);
     if (!$ta_result) {
@@ -105,7 +114,7 @@
       mysqli_free_result($worked_result);
    }
 
-// Close database connection
+    // Close database connection
     mysqli_close($connection);?>
 </div>
 </body>

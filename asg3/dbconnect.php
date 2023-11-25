@@ -1,3 +1,10 @@
+<!-- Programmer: Joud Al-lahham 
+     Student Number: 82
+     Date: 2023/11/25
+     File: dbconnect.php
+     Description: This file connects to the database built for this assignment.
+-->
+
 <?php
 $dbhost = "localhost";
 $dbuser= "root";

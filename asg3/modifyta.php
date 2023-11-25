@@ -1,3 +1,11 @@
+<!-- Programmer: Joud Al-lahham 
+     Student Number: 82
+     Date: 2023/11/25
+     File: modifyta.php
+     Description:This page allows users to modify information for an existing Teaching Assistant (TA) in the database. 
+     The user can update the TA's name, degree type, and courses loved or hated.
+-->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,12 +21,14 @@
        <a href="mainmenu.php" class="button">Menu</a>
     </div>
 
+    <!-- Form to collect new TA information from the user -->
     <form action="modifyta.php" method="post">
         TA User ID (required): <input type="text" name="userid"><br>
         New First Name: <input type="text" name="newfirstname"><br>
         New Last Name: <input type="text" name="newlastname"><br>
         New Degree Type: <input type="text" name="newdegreetype"><br>
-        
+ 
+       <!-- Dropdown for selecting courses the TA loves -->        
 	<h2>Courses Loved:</h2>
 	<?php
 	$coursesQuery = "SELECT coursenum, coursename FROM course ORDER BY coursenum";
@@ -32,6 +42,7 @@
 	}
 	?>
 
+        <!-- Dropdown for selecting courses the TA hates -->
 	<h2>Courses Hated:</h2>
 	<?php
 	mysqli_data_seek($coursesResult, 0);
@@ -43,12 +54,14 @@
 	    echo '</select>';
 	}
 	?>
-   
+       
+	 <!-- Section to assign courses and hours worked -->   
 	<div class="assign-courses">
 	<label for="assignedCourse">Select Course:</label>
 	<select name="assignedCourse" id="assignedCourse">
         <option value="">No Course Selected</option>
     	<?php
+        // Query to get course offers for dropdown, ordered by year and course number
 	$coursesQuery = "SELECT courseoffer.coid, courseoffer.year, course.coursenum, course.coursename FROM courseoffer INNER JOIN course ON courseoffer.whichcourse = course.coursenum ORDER BY courseoffer.year DESC, course.coursenum";
     	$coursesResult = mysqli_query($connection, $coursesQuery);    
 	    if (!$coursesResult) {
@@ -69,6 +82,8 @@
 	</div>
         <input type="submit" value="Modify TA"> 
    </form>
+
+// Processes form submission
 <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tauserid = mysqli_real_escape_string($connection, $_POST["userid"]);
@@ -76,7 +91,7 @@
     $newlastname = mysqli_real_escape_string($connection, $_POST["newlastname"]);
     $newdegreetype = mysqli_real_escape_string($connection, $_POST["newdegreetype"]);
     
-    // Retrieve the assigned course ID and hours worked if provided
+    // Get the assigned course ID and hours worked if provided
     $assignedCoid = isset($_POST["assignedCourse"]) ? mysqli_real_escape_string($connection, $_POST["assignedCourse"]) : null;
     $hoursWorked = isset($_POST["hoursWorked"]) ? mysqli_real_escape_string($connection, $_POST["hoursWorked"]) : null;
 
