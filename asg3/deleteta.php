@@ -3,18 +3,37 @@
 <head>
     <meta charset="utf-8">
     <title>Delete TA</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <?php include 'connectdb.php'; ?>
-
-    <h1>Deleting TA</h1>
+    <?php include 'dbconnect.php'; ?>
+    <div class="back-to-menu">
+       <a href="mainmenu.php" class="button">Menu</a>
+    </div>
+<div class="container">
+    <h1>Delete TA</h1>
     <form action="deleteta.php" method="post">
-        TA User ID (required for deletion): <input type="text" name="userid"><br>
+        Select TA to delete: 
+        <select name="userid">
+            <option value="">Select a TA</option>
+            <?php
+            // Query to fetch all TA details
+            $query = "SELECT tauserid, firstname, lastname FROM ta ORDER BY lastname, firstname";
+            $result = mysqli_query($connection, $query);
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<option value='" . $row['tauserid'] . "'>" . $row['firstname'] . " " . $row['lastname'] . " (" . $row['tauserid'] . ")</option>";
+                }
+            }
+            ?>
+        </select>
+        <br>
+	<br>
         <input type="submit" value="Delete TA">
     </form>
 
     <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["userid"])) {
         $tauserid = mysqli_real_escape_string($connection, $_POST["userid"]);
 
         // Check if TA is assigned to a course offering
@@ -35,5 +54,6 @@
 
     mysqli_close($connection);
     ?>
+</div>
 </body>
 </html>

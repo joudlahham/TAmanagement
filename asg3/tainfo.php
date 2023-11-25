@@ -1,51 +1,32 @@
-// Programmer Name: Joud Al-lahham
-// Student Number: 82
-//
-
-<?php require_once('dbconnect.php'); // Include the database connection ?>
+<?php require_once('dbconnect.php');?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>TA Information</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <a href="mainmenu.php">Back to menu</a>
-    <h2>TA Info</h2>
+   <div class="back-to-menu">
+    <a href="mainmenu.php" class="button">Menu</a>
+  </div>
+  <div class="container">
+    <h1>TA Information</h1>
     <form action="tainfo.php" method="post">
-        <div>
-            <input type="radio" id="lastname" name="sortby" value="lastname" checked>
-            <label for="lastname">Sort by Last Name</label>
-        </div>
-        <div>
-            <input type="radio" id="degreetype" name="sortby" value="degreetype">
-            <label for="degreetype">Sort by Degree Type</label>
-        </div>
-        <div>
-            <input type="radio" id="asc" name="order" value="ASC" checked>
-            <label for="asc">Ascending</label>
-            <input type="radio" id="desc" name="order" value="DESC">
-            <label for="desc">Descending</label>
-        </div>
-        <input type="submit" value="Sort">
+    <label for="sortby">Sort by:</label>
+    <select id="sortby" name="sortby">
+        <option value="lastname">Last Name</option>
+        <option value="degreetype">Degree Type</option>
+    </select>
+
+    <label for="order">Order:</label>
+    <select id="order" name="order">
+        <option value="ASC">Ascending</option>
+        <option value="DESC">Descending</option>
+    </select>
+
+    <input type="submit" value="Sort" class="button">
+
     </form>
     <table>
         <tr>
@@ -54,42 +35,45 @@
             <th>Last Name</th>
             <th>Student Number</th>
             <th>Degree Type</th>
+            <th>Details</th>
         </tr>
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   	$sortby = $_POST['sortby'];
-    	$order = $_POST['order'];
+</div>
+        <?php
+        $whereClause = '';
+        if (isset($_POST['degreeFilter'])) {
+            $degreeFilter = mysqli_real_escape_string($connection, $_POST['degreeFilter']);
+            $whereClause = "WHERE degreetype = '{$degreeFilter}'";
+        }
 
-   	// Validate the sortby and order inputs before using them in the query
-    	$query = "SELECT * FROM ta ORDER BY " . $sortby . " " . $order;
-	} else {
-    	$query = "SELECT * FROM ta";
-	}
-	$result = mysqli_query($connection, $query);
+        $orderBy = 'lastname ASC'; // default order
+        if (isset($_POST['sortby']) && isset($_POST['order'])) {
+            $sortby = mysqli_real_escape_string($connection, $_POST['sortby']);
+            $order = mysqli_real_escape_string($connection, $_POST['order']);
+            $orderBy = "{$sortby} {$order}";
+        }
+        $query = "SELECT * FROM ta {$whereClause} ORDER BY {$orderBy}";
+        $result = mysqli_query($connection, $query);
 
-        // Check for errors in the query
         if (!$result) {
             die("Database query failed.");
         }
 
-        // Use returned data (if any)
-        while($ta = mysqli_fetch_assoc($result)) {
-            // Output data from each row
+        while ($ta = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td>" . $ta['tauserid'] . "</td>";
-            echo "<td>" . $ta['firstname'] . "</td>";
-            echo "<td>" . $ta['lastname'] . "</td>";
-            echo "<td>" . $ta['studentnum'] . "</td>";
-            echo "<td>" . $ta['degreetype'] . "</td>";
+            echo "<td>" . htmlspecialchars($ta['tauserid']) . "</td>";
+            echo "<td>" . htmlspecialchars($ta['firstname']) . "</td>";
+            echo "<td>" . htmlspecialchars($ta['lastname']) . "</td>";
+            echo "<td>" . htmlspecialchars($ta['studentnum']) . "</td>";
+            echo "<td>" . htmlspecialchars($ta['degreetype']) . "</td>";
+            echo "<td><a href='tadetails.php?taid=" . urlencode($ta['tauserid']) . "'>View Details</a></td>";
             echo "</tr>";
         }
-        // Free the results from memory
+
         mysqli_free_result($result);
         ?>
     </table>
 </body>
 </html>
 <?php
-// Close database connection
 mysqli_close($connection);
 ?>
-
