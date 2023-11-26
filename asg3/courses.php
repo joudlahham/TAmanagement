@@ -65,31 +65,56 @@
           $endYear = intval($_POST["endYear"]);
         // Append the date filtering to the query
           $courseQuery .= " AND year BETWEEN '{$startYear}' AND '{$endYear}'";
-    }
+	}
         // Complete the query with ordering
 	$courseQuery .= " ORDER BY year, term";
         $courseResult = mysqli_query($connection, $courseQuery);
         if (!$courseResult) {
             die("Database query failed.");
         }
-        // Display the course offerings in a table
-        echo "<h2>Offerings for Course: " . htmlspecialchars($selectedCourse) . "</h2>";
-        if (mysqli_num_rows($courseResult) > 0) {
-            echo "<table>";
-            echo "<tr><th>Offering ID</th><th>Student Count</th><th>Term</th><th>Year</th></tr>";
-            // Table rows for each course offering
-            while ($courseRow = mysqli_fetch_assoc($courseResult)) {
-                echo "<tr>";
-                echo "<td>" . htmlspecialchars($courseRow['coid']) . "</td>";
-                echo "<td>" . htmlspecialchars($courseRow['numstudent']) . "</td>";
-                echo "<td>" . htmlspecialchars($courseRow['term']) . "</td>";
-                echo "<td>" . htmlspecialchars($courseRow['year']) . "</td>";
-                echo "</tr>";
-            }
-            echo "</table>";
-        } else {
-            echo "No offerings found for this course or within the specified years.";
-        }
+	// Initialize $taDetails to an empty string
+	$taDetails = '';
+
+	// Display the course offerings in a table
+	echo "<h2>Offerings for Course: " . htmlspecialchars($selectedCourse) . "</h2>";
+	if (mysqli_num_rows($courseResult) > 0) {
+	    echo "<table>";
+	    echo "<tr><th>Offering ID</th><th>Student Count</th><th>Term</th><th>Year</th><th>TA Details</th></tr>";
+	    while ($courseRow = mysqli_fetch_assoc($courseResult)) {
+	        echo "<tr>";
+	        echo "<td>" . htmlspecialchars($courseRow['coid']) . "</td>";
+	        echo "<td>" . htmlspecialchars($courseRow['numstudent']) . "</td>";
+	        echo "<td>" . htmlspecialchars($courseRow['term']) . "</td>";
+	        echo "<td>" . htmlspecialchars($courseRow['year']) . "</td>";
+
+	        // Query to get TA details for the current course offering
+	        $taQuery = "SELECT ta.firstname, ta.lastname, ta.tauserid 
+	                    FROM ta 
+	                    JOIN hasworkedon ON ta.tauserid = hasworkedon.tauserid 
+	                    WHERE hasworkedon.coid = '{$courseRow['coid']}'";
+	        $taResult = mysqli_query($connection, $taQuery);
+
+	        if ($taResult && mysqli_num_rows($taResult) > 0) {
+	            // Display TA details for the offering
+	            $taDetails = '';
+	            while ($ta = mysqli_fetch_assoc($taResult)) {
+	                $taDetails .= htmlspecialchars($ta['firstname']) . " " 
+	                    . htmlspecialchars($ta['lastname']) . " (" 
+	                    . htmlspecialchars($ta['tauserid']) . ")<br>";
+	            }
+	            echo "<td>" . $taDetails . "</td>"; // Ensure the TA details are in the same <td>
+	        } else {
+	            echo "<td>No TAs found for this offering</td>";
+	        }
+	        echo "</tr>"; // Close the table row here
+	        // Free TA result set
+	        mysqli_free_result($taResult);
+	    }
+	    echo "</table>";
+	} else {
+	    echo "No offerings found for this course or within the specified years.";
+	}
+
         mysqli_free_result($courseResult); // Free the result set
     }
     mysqli_close($connection);

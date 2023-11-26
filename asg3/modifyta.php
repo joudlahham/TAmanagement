@@ -83,7 +83,6 @@
         <input type="submit" value="Modify TA"> 
    </form>
 
-// Processes form submission
 <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tauserid = mysqli_real_escape_string($connection, $_POST["userid"]);

@@ -11,17 +11,27 @@
     <meta charset="utf-8">
     <title>Delete TA</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+    // JavaScript function to confirm deletion
+    function confirmDeletion() {
+        var userid = document.querySelector('select[name="userid"]').value;
+        if (userid) {
+            return confirm("Are you sure you want to delete this TA?");
+        } else {
+            alert("Please select a TA to delete.");
+            return false;
+        }
+    }
+    </script>
 </head>
 <body>
     <?php include 'dbconnect.php'; ?>
     <div class="back-to-menu">
        <a href="mainmenu.php" class="button">Menu</a>
     </div>
-    <!-- Container for the TA deletion form -->
     <div class="container">
     <h1>Delete TA</h1> 
-    <!-- Form for selecting a TA to delete -->
-    <form action="deleteta.php" method="post">
+    <form action="deleteta.php" method="post" onsubmit="return confirmDeletion();">
         Select TA to delete: 
         <select name="userid">
             <option value="">Select a TA</option>
@@ -30,15 +40,13 @@
             $query = "SELECT tauserid, firstname, lastname FROM ta ORDER BY lastname, firstname";
             $result = mysqli_query($connection, $query);
             if ($result) {
-                // Iterate through each TA and add them to the dropdown
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<option value='" . $row['tauserid'] . "'>" . $row['firstname'] . " " . $row['lastname'] . " (" . $row['tauserid'] . ")</option>";
                 }
             }
             ?>
         </select>
-        <br>
-	<br>
+        <br><br>
         <input type="submit" value="Delete TA">
     </form>
 

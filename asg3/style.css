@@ -49,6 +49,12 @@ form p, form input[type="submit"] {
     margin-bottom: 10px;
 }
 
+ .container ul {
+        list-style-type: none; /* No bullets */
+        padding: 0; /* Reset padding */
+        margin: 0; /* Reset margins */
+    }
+
 form input[type="text"],
 form input[type="number"] {
     width: calc(100% - 22px);
