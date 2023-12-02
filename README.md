@@ -27,4 +27,5 @@
 </ol>
 
 <h2>Usage</h2>
+<a href="https://cs3319.gaul.csd.uwo.ca/vm013/a3yourfavouriteanimal/mainmenu.php">View Here</a>
 <p>Start by accessing the main menu, where you can choose to view TA information, manage courses, or modify TA records. Each feature has a dedicated interface with forms to submit data or commands to the system.</p>
