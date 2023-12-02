@@ -26,7 +26,12 @@
         TA User ID (required): <input type="text" name="userid"><br>
         New First Name: <input type="text" name="newfirstname"><br>
         New Last Name: <input type="text" name="newlastname"><br>
-        New Degree Type: <input type="text" name="newdegreetype"><br>
+          <p> Degree Type:
+                <select name="degreetype" required>
+                <option value="Masters">Masters</option>
+                <option value="PhD">PhD</option>
+                </select>
+             </p>
  
        <!-- Dropdown for selecting courses the TA loves -->        
 	<h2>Courses Loved:</h2>
@@ -78,7 +83,7 @@
 	</select>
 
         <label for="taImageUrl">TA Image URL:</label>
-        <input type="text" name="taImageUrl" id="taImageUrl" placeholder="Enter image URL">
+        <input type="text" name="taImageUrl" id="taImageUrl">
 
         <label for="hoursWorked">Hours Worked:</label>
         <input type="number" name="hoursWorked" id="hoursWorked" min="0">

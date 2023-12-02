@@ -43,7 +43,7 @@
         die("TA not found.");
     }
    
-    $defaultImageUrl = "https://media.licdn.com/dms/image/D4D03AQFKngNCw1WSqw/profile-displayphoto-shrink_800_800/0/1669733427683?e=2147483647&v=beta&t=iaOYFmG49j2AdYyw0r0WOhWdx1vrdHLaZUbxbM3ujE0";
+    $defaultImageUrl = "https://1fid.com/wp-content/uploads/2022/12/meme-profile-picture-1024x1022.jpg";
     $imageUrl = isset($ta['imageurl']) && !empty($ta['imageurl']) ? $ta['imageurl'] : $defaultImageUrl;
 
     // Display the TA's details
